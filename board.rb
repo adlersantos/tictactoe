@@ -4,6 +4,11 @@ class Board
 	def initialize
 		@state = []
 		make_blank_board
+
+		3.times { @state << [] }
+		@state.each do |row|
+			3.times { row << nil }
+		end
 	end
 
 	def columns
@@ -27,9 +32,9 @@ class Board
 
 	def empty_slots
 		empty_slots = []
-		@state.each_index do |i| 
-			@state[i].each_index do |j| 
-				empty_slots << [i, j] if @state[i][j].nil? 
+		@state.each_index do |i|
+			@state[i].each_index do |j|
+				empty_slots << [i, j] if @state[i][j].nil?
 			end
 		end
 		empty_slots
@@ -98,4 +103,10 @@ class Board
 		line.count(symbol) == 2 and line.count(nil) == 1
 	end
 
+	def self.common_symbol(set_of_lines)
+		set_of_lines.each do |line|
+			return line.max if line.max == line.min
+		end
+		nil
+	end
 end
