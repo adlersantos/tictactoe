@@ -3,7 +3,11 @@ class Board
 
 	def initialize
 		@state = []
-		make_blank_board
+
+		3.times { @state << [] }
+		@state.each do |row|
+			3.times { row << nil }
+		end
 	end
 
 	def columns
@@ -13,6 +17,7 @@ class Board
 				columns[col_num] ? columns[col_num] << el : columns[col_num] = [el]
 			end
 		end
+
 		columns
 	end
 
@@ -22,17 +27,8 @@ class Board
 			diagonals[0] << @state[index][index]
 			diagonals[1] << @state[index][(1 + index) * -1]
 		end
-		diagonals
-	end
 
-	def empty_slots
-		empty_slots = []
-		@state.each_index do |i| 
-			@state[i].each_index do |j| 
-				empty_slots << [i, j] if @state[i][j].nil? 
-			end
-		end
-		empty_slots
+		diagonals
 	end
 
 	def get_position(row_num, col_num)
@@ -56,8 +52,8 @@ class Board
 		false
 	end
 
-	def make_blank_board
-		3.times { @state << { 3.times { [] << nil } } }
+	def occupied_at?(row, col)
+		!get_position(row, col)
 	end
 
 	def print_state
