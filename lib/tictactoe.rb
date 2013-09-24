@@ -1,4 +1,6 @@
 require_relative './board'
+require_relative './treenode'
+require 'debugger'
 
 class Game
 	attr_reader :player1, :player2
@@ -6,7 +8,7 @@ class Game
 
 	def initialize
 		@player1 = Player.new('x')
-		@player2 = Player.new('o')
+		@player2 = Computer.new('o')
 		@board = Board.new
 	end
 
@@ -30,8 +32,14 @@ class Game
 			puts "Player #{i + 1}, make your move:"
 
 			while true
-				player_move = gets.chomp
-				row, col = player_move.scan(/\-?\d+/).map(&:to_i)
+				if player.class == Computer
+					comp_position = player.calculate_move(board)
+					row, col = comp_position[0], comp_position[1]
+					p "row: #{row}", "col #{col}"
+				else
+					player_move = gets.chomp
+					row, col = player_move.scan(/\-?\d+/).map(&:to_i)
+				end
 
 				if row.nil? || col.nil?
 					puts "Invalid move. Make your move again player #{i + 1}:"
@@ -68,11 +76,8 @@ class Player
 	end
 end
 
-# class Human < Player
-# end
-
 class Computer < Player
-	def initialize
+	def initialize(symbol)
 		super(symbol)
 	end
 
@@ -80,14 +85,22 @@ class Computer < Player
 		position = []
 
 		board.rows.each_with_index do |row, i|
-			position = [i, row.index(nil)] if Board.pair_exists?(row, @symbol)
+			return position = [i, row.index(nil)] if Board.pair_exists?(row, @symbol)
 		end
 		board.columns.each_with_index do |column, i|
-			position = [column.index(nil), i] if Board.pair_exists?(column, @symbol)
+			return position = [column.index(nil), i] if Board.pair_exists?(column, @symbol)
 		end
 
+		row = Random.rand(3)
+		col = Random.rand(3)
+		until !board.occupied_at?(row, col)
+			row = Random.rand(3)
+			col = Random.rand(3)
+		end
+
+		return [row, col]
 		# problem with diagonals (just do them pairwise?)
-		nil_index = Computer.pair_exists?(board.diagonals[0])
+		# nil_index = Computer.pair_exists?(board.diagonals[0])
 	end
 end
 

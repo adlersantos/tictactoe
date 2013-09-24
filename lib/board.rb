@@ -53,7 +53,7 @@ class Board
 	end
 
 	def occupied_at?(row, col)
-		!get_position(row, col)
+		!!get_position(row, col)
 	end
 
 	def print_state
