@@ -1,9 +1,8 @@
-require 'debugger'
 require_relative './board'
 
 class Game
 	attr_reader :player1, :player2
-	attr_accessor :board	
+	attr_accessor :board
 
 	def initialize
 		@player1 = Player.new('x')
@@ -26,7 +25,7 @@ class Game
 		@board.print_state
 
 		until board.has_win?
-			player = players[i]	
+			player = players[i]
 
 			puts "Player #{i + 1}, make your move:"
 
@@ -43,7 +42,7 @@ class Game
  				puts "Invalid move. Make your move again player #{i + 1}:"
 			end
 
-	  	player.move(row, col, @board)  
+	  	player.move(row, col, @board)
 
 			@board.print_state
 
@@ -72,7 +71,7 @@ end
 # class Human < Player
 # end
 
-class Computer < Player	
+class Computer < Player
 	def initialize
 		super(symbol)
 	end
@@ -80,7 +79,7 @@ class Computer < Player
 	def calculate_move(board)
 		position = []
 
-		board.rows.each_with_index do |row, i| 
+		board.rows.each_with_index do |row, i|
 			position = [i, row.index(nil)] if Board.pair_exists?(row, @symbol)
 		end
 		board.columns.each_with_index do |column, i|
