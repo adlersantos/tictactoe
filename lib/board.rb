@@ -90,6 +90,10 @@ class Board
 
 	def generate_triangles
 		triangles = []
+		triangles << [[0, 0], [1, 1], [2, 0]]
+		triangles << [[0, 0], [1, 1], [0, 2]]
+		triangles << [[2, 2], [1, 1], [0, 2]]
+		triangles << [[2, 2], [1, 1], [2, 0]]
 		squares_top_left.each do |pos|
 			triangles << [pos, pos.sum_with(1, 0), pos.sum_with(0, 1)]
 			triangles << [pos, pos.sum_with(0, 1), pos.sum_with(1, 1)]
@@ -111,6 +115,10 @@ class Board
 		nil
 	end
 
+	def self.only_one?(line, symbol)
+		line.count(symbol) == 1 && line.count(nil) == 2
+	end
+
 	def self.has_same_elements?(lines)
 		lines.each do |line|
 			return true if !line.include?(nil) && line.uniq.count == 1
@@ -118,7 +126,7 @@ class Board
 		false
 	end
 
-	def self.pair_exists?(arr, symbol)
-		arr.count(symbol) == 2 and arr.count(nil) == 1
+	def self.has_pair?(arr, symbol)
+		arr.count(symbol) == 2 && arr.count(nil) == 1
 	end
 end
