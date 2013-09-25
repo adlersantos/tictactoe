@@ -1,7 +1,8 @@
 require_relative './array'
 
 class Board
-	attr_accessor :state, :triangles
+	attr_accessor :state
+	attr_reader :triangles
 
 	def initialize(state=[])
 		@state = state
