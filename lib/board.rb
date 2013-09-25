@@ -1,13 +1,17 @@
-class Board
-	attr_accessor :state
+require_relative './array'
 
-	def initialize
-		@state = []
+class Board
+	attr_accessor :state, :triangles
+
+	def initialize(state=[])
+		@state = state
 
 		3.times { @state << [] }
 		@state.each do |row|
 			3.times { row << nil }
 		end
+
+		@triangles = generate_triangles
 	end
 
 	def columns
@@ -21,14 +25,23 @@ class Board
 		columns
 	end
 
+	def corners_empty?
+		corners = [[0, 0], [0, 2], [2, 0], [2, 2]]
+		corners.all? { |corner| !occupied_at?(corner[0], corner[1]) }
+	end
+
 	def diagonals
 		diagonals = [[], []]
 		(0..2).each do |index|
 			diagonals[0] << @state[index][index]
-			diagonals[1] << @state[index][(1 + index) * -1]
+			diagonals[1] << @state[index][-1 - index]
 		end
 
 		diagonals
+	end
+
+	def filled_up?
+		columns.all? { |column| column.all? { |el| el != nil } }
 	end
 
 	def get_position(row_num, col_num)
@@ -57,8 +70,9 @@ class Board
 	end
 
 	def print_state
-		@state.each do |row|
-			puts "#{row}"
+			puts "    0    1    2  "
+		@state.each_with_index do |row, index|
+			puts "#{index} #{row}"
 		end
 	end
 
@@ -70,11 +84,25 @@ class Board
 		@state[row_num][col_num] = symbol
 	end
 
+	def squares_top_left
+		[[0, 0], [0, 1], [1, 0], [1, 1]]
+	end
+
+	def generate_triangles
+		triangles = []
+		squares_top_left.each do |pos|
+			triangles << [pos, pos.sum_with(1, 0), pos.sum_with(0, 1)]
+			triangles << [pos, pos.sum_with(0, 1), pos.sum_with(1, 1)]
+			triangles << [pos, pos.sum_with(1, 0), pos.sum_with(1, 1)]
+			triangles << [pos.sum_with(0, 1), pos.sum_with(1, 1), pos.sum_with(1, 0)]
+		end
+
+		triangles
+	end
+
 	def winning_symbol(lines)
 		return Board::common_symbol(lines) if Board::has_same_elements?(lines)
 	end
-
-  # class methods go below
 
 	def self.common_symbol(set_of_lines)
 		set_of_lines.each do |line|
@@ -90,8 +118,7 @@ class Board
 		false
 	end
 
-	def self.pair_exists?(line, symbol)
-		line.count(symbol) == 2 and line.count(nil) == 1
+	def self.pair_exists?(arr, symbol)
+		arr.count(symbol) == 2 and arr.count(nil) == 1
 	end
-
 end

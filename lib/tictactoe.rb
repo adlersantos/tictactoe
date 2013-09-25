@@ -1,6 +1,5 @@
 require_relative './board'
-require_relative './treenode'
-require 'debugger'
+require_relative './player'
 
 class Game
 	attr_reader :player1, :player2
@@ -35,7 +34,6 @@ class Game
 				if player.class == Computer
 					comp_position = player.calculate_move(board)
 					row, col = comp_position[0], comp_position[1]
-					p "row: #{row}", "col #{col}"
 				else
 					player_move = gets.chomp
 					row, col = player_move.scan(/\-?\d+/).map(&:to_i)
@@ -59,48 +57,13 @@ class Game
 				break
 			end
 
+			if board.filled_up?
+				puts "It's a draw."
+				break
+			end
+
 			i = 1 - i
 		end
-	end
-end
-
-class Player
-	attr_accessor :symbol
-
-	def initialize(symbol)
-		@symbol = symbol
-	end
-
-	def move(row, col, board)
-  	board.set_position(row, col, @symbol)
-	end
-end
-
-class Computer < Player
-	def initialize(symbol)
-		super(symbol)
-	end
-
-	def calculate_move(board)
-		position = []
-
-		board.rows.each_with_index do |row, i|
-			return position = [i, row.index(nil)] if Board.pair_exists?(row, @symbol)
-		end
-		board.columns.each_with_index do |column, i|
-			return position = [column.index(nil), i] if Board.pair_exists?(column, @symbol)
-		end
-
-		row = Random.rand(3)
-		col = Random.rand(3)
-		until !board.occupied_at?(row, col)
-			row = Random.rand(3)
-			col = Random.rand(3)
-		end
-
-		return [row, col]
-		# problem with diagonals (just do them pairwise?)
-		# nil_index = Computer.pair_exists?(board.diagonals[0])
 	end
 end
 
