@@ -93,8 +93,8 @@ class Board
 		triangles = []
 		triangles << [[0, 0], [1, 1], [2, 0]]
 		triangles << [[0, 0], [1, 1], [0, 2]]
-		triangles << [[2, 2], [1, 1], [0, 2]]
 		triangles << [[2, 2], [1, 1], [2, 0]]
+		triangles << [[2, 2], [1, 1], [0, 2]]
 		squares_top_left.each do |pos|
 			triangles << [pos, pos.sum_with(1, 0), pos.sum_with(0, 1)]
 			triangles << [pos, pos.sum_with(0, 1), pos.sum_with(1, 1)]
