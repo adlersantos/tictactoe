@@ -41,6 +41,19 @@ class Board
 		diagonals
 	end
 
+	def empty_tiles
+		empty_positions = []
+		3.times.each do |i|
+			3.times.each do |j|
+				unless get_position(i, j)
+					empty_positions << [i, j]
+				end
+			end
+		end
+		p empty_positions.count
+		empty_positions
+	end
+
 	def filled_up?
 		columns.all? { |column| column.all? { |el| el != nil } }
 	end

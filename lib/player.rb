@@ -21,12 +21,26 @@ class Computer < Player
       return [0, 0]
     elsif !board.occupied_at?(1, 1)
       return [1, 1]
+    elsif edge_case?(board)
+      return [2, 0]
     end
 
     return find_hole('has_pair?', board, @symbol) if find_hole('has_pair?', board, @symbol)
     return find_hole('has_pair?', board, 'x') if find_hole('has_pair?', board, 'x')
     return find_triangulation(board, 'x') if find_triangulation(board, 'x')
     return find_hole('only_one?', board, @symbol)
+  end
+
+  def edge_case?(board)
+    count = 0
+    [1, 2].each do |i|
+      if board.state[i][i] == @symbol
+        count += 1;
+      end
+    end
+    if count == 2 && board.empty_tiles.count == 6
+      return true;
+    end
   end
 
   def find_hole(method_name, board, symbol)
